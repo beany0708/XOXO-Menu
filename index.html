@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Cocktail Catering - Craft Your Perfect Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        html {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0A0A0A;
+        }
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: #0A0A0A;
+            color: #F5F5F5;
+            overflow-x: hidden;
+            
+            max-height: 98vh;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            html {
+                align-items: flex-start;
+            }
+            
+            body {
+                width: 100%;
+                min-height: 100vh;
+                max-height: none;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .gold-text {
+            color: #e2a30a;
+        }
+        
+        .gold-text-light {
+            color: #F5E8C7;
+        }
+        
+        .bg-dark {
+            background-color: #0A0A0A;
+        }
+        
+        .bg-card {
+            background-color: #1C1C1C;
+        }
+        
+        .border-gold {
+            border-color: #e2a30a;
+        }
+        
+        .hover-gold:hover {
+            border-color: #F5E8C7;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn-gold {
+            background-color: transparent;
+            border: 2px solid #e2a30a;
+            color: #e2a30a;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gold:hover {
+            background-color: #e2a30a;
+            color: #0A0A0A;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+        }
+        
+        .btn-gold:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .btn-gold:disabled:hover {
+            background-color: transparent;
+            color: #e2a30a;
+            box-shadow: none;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .ingredient-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .ingredient-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .ingredient-card.selected {
+            border-color: #e2a30a;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        .cocktail-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .cocktail-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+        }
+        
+        .cocktail-image {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cocktail-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0) 0%, rgba(212, 175, 55, 0.3) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .cocktail-card:hover .cocktail-image::after {
+            opacity: 1;
+        }
+        
+        .gold-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: #e2a30a;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-100px) translateX(50px);
+            }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: #1C1C1C;
+            border: 2px solid #e2a30a;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .checkbox-gold {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #e2a30a;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-gold:checked {
+            background-color: #e2a30a;
+        }
+        
+        .checkbox-gold:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0A0A0A;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .ingredient-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #1C1C1C;
+            border: 1px solid #e2a30a;
+            border-radius: 20px;
+            color: #e2a30a;
+            font-size: 14px;
+            margin: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .ingredient-tag:hover {
+            background-color: #e2a30a;
+            color: #0A0A0A;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        
+        .menu-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .menu-image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .match-score {
+            background: linear-gradient(135deg, #e2a30a 0%, #F5E8C7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+        
+        .divider-gold {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #e2a30a 50%, transparent 100%);
+            margin: 40px 0;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #333;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background-color: #e2a30a;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: #F5F5F5;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+        
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #e2a30a;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F5E8C7;
+        }
+        
+        @media (max-width: 1024px) {
+            .lg\:w-2\/5, .lg\:w-3\/5 {
+                width: 100%;
+            }
+            
+            .sticky.top-32 {
+                position: relative;
+                top: 0;
+            }
+        }
+        
+        .badge-gold {
+            background-color: #0A0A0A;
+            border: 2px solid #e2a30a;
+        }
+        
+        .menu-nav-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .menu-nav-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        .menu-nav-btn:hover span {
+            color: #e2a30a;
+        }
+        
+        .header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(30, 25, 15, 0.98) 100%);
+            border-bottom: 2px solid #e2a30a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(226, 163, 10, 0.2);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            background-color: rgba(226, 163, 10, 0.1);
+            border: 2px solid #e2a30a;
+            color: #e2a30a;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: space-between;
+        }
+        
+        .lang-btn:hover {
+            background-color: rgba(226, 163, 10, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(226, 163, 10, 0.3);
+        }
+        
+        .lang-btn::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .lang-dropdown.active .lang-btn::after {
+            transform: rotate(180deg);
+        }
+        
+        .lang-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background-color: rgba(10, 10, 10, 0.98);
+            border: 2px solid #e2a30a;
+            border-radius: 8px;
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        .lang-dropdown.active .lang-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .lang-option {
+            padding: 10px 16px;
+            color: #e2a30a;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(226, 163, 10, 0.2);
+        }
+        
+        .lang-option:last-child {
+            border-bottom: none;
+        }
+        
+        .lang-option:hover {
+            background-color: rgba(226, 163, 10, 0.2);
+            padding-left: 20px;
+        }
+        
+        .lang-option.active {
+            background-color: #e2a30a;
+            color: #0A0A0A;
+            font-weight: 600;
+        }
+        
+        .active-filter {
+            background-color: #e2a30a !important;
+            color: #0A0A0A !important;
+            font-weight: 600;
+        }
+        
+        .header-social-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .header-bar {
+                padding: 10px 12px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .header-left {
+                gap: 10px;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                min-width: 100px;
+            }
+            
+            .header-social-buttons {
+                gap: 8px;
+            }
+            
+            .social-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            
+            #quiz-page-1,
+            #quiz-page-2,
+            #quiz-page-3,
+            #quiz-page-4 {
+                padding-top: 80px !important;
+            }
+            
+            #step1 {
+                padding-top: 80px !important;
+            }
+            
+            #step2 {
+                padding-top: 80px !important;
+            }
+        }
+        
+        .social-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: rgba(226, 163, 10, 0.1);
+            border: 2px solid #e2a30a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(226, 163, 10, 0.2);
+        }
+        
+        .social-btn:hover {
+            background-color: #e2a30a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(226, 163, 10, 0.4);
+        }
+        
+        .social-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+        
+        .social-btn:hover .social-icon {
+            filter: brightness(0) saturate(100%) invert(6%) sepia(6%) saturate(0%) hue-rotate(165deg) brightness(95%) contrast(88%);
+        }
+        
+        .quiz-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .quiz-option.selected {
+            background-color: #e2a30a;
+            color: #0A0A0A;
+            border-color: #e2a30a;
+        }
+        
+        .quiz-question {
+            margin-bottom: 12px;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .quiz-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .menu-image-clickable {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-image-clickable:hover {
+            transform: scale(1.02);
+        }
+        
+        #menuImageContainer {
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #cocktailsGrid {
+            min-height: 400px;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="gold-particles" id="particles"></div>
+    
+    <!-- Header Bar -->
+    <header class="header-bar">
+        <div class="header-left">
+            <!-- Language Dropdown -->
+            <div class="lang-dropdown" id="langDropdown">
+                <button class="lang-btn" id="langButton" onclick="toggleLanguageDropdown()">
+                    <span id="currentLang">English</span>
+                </button>
+                <div class="lang-dropdown-menu">
+                    <div class="lang-option active" onclick="selectLanguage('en')">English</div>
+                    <div class="lang-option" onclick="selectLanguage('zh')">中文</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Social Buttons -->
+        <div class="header-social-buttons">
+            <a href="https://www.instagram.com/xoxobeverages" target="_blank" class="social-btn" title="Instagram">
+                <img src="Instagram_icon.png" alt="Instagram" class="social-icon">
+            </a>
+            <a href="https://xoxobeverages.com/" target="_blank" class="social-btn" title="Website">
+                🌐
+            </a>
+            <a href="https://wa.me/85297647174" target="_blank" class="social-btn" title="WhatsApp">
+                📱
+            </a>
+            <a href="https://xoxobeverages.com/event-enquiry/" target="_blank" class="social-btn" title="Event Enquiry">
+                📋
+            </a>
+        </div>
+    </header>
+    
+    <!-- Quiz Flow v4.0 - Updated April 2026 - Fixed Hidden Class & Page 3 Button -->
+    <div class="relative z-10">
+        <!-- Quiz Page 1 -->
+        <div id="quiz-page-1" class="py-8 px-4 fade-in" style="display: block;">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl md:text-4xl font-bold gold-text mb-2 md:pt-[100px]" style="padding-top:50px" data-i18n="title">Find Your Perfect Cocktail Menu</h1>
+                    <p class="text-sm md:text-base gold-text-light" data-i18n="progress">Question 1 of 4</p>
+                    <div class="divider-gold" style="margin: 12px 0;"></div>
+                </div>
+                
+                <div class="bg-card border-2 border-gold rounded-lg p-8" style="min-height: 650px;">
+                    <div class="quiz-question">
+                        <div class="text-center">
+                            <div class="quiz-icon">🍹</div>
+                        </div>
+                        <h3 class="text-2xl font-semibold gold-text mb-6 text-center" data-i18n="question1">What kind of taste do you prefer?</h3>
+                        <div class="quiz-options" style="flex-direction: column; gap: 12px;">
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('taste', 'sweet')" data-question="taste" data-value="sweet">Sweet & Fruity</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('taste', 'refreshing')" data-question="taste" data-value="refreshing">Refreshing & Light</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('taste', 'balanced')" data-question="taste" data-value="balanced">Balanced & Smooth</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('taste', 'bold')" data-question="taste" data-value="bold">Bold & Zesty</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('taste', 'any')" data-question="taste" data-value="any">Any / No preference</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 space-y-3">
+                        <button id="nextBtn1" class="btn-gold px-6 py-2 text-base font-semibold rounded-lg w-full" disabled onclick="goToQuizPage(2)" data-i18n="btn-next">Next →</button>
+                        <div class="flex gap-3">
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="restartQuiz()" data-i18n="btn-restart-quiz">🔄 Restart</button>
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="showAllMenus()" data-i18n="btn-see-all-menus">📋 See All Menus</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quiz Page 2 -->
+        <div id="quiz-page-2" class="py-8 px-4 fade-in hidden">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl md:text-4xl font-bold gold-text mb-2 md:pt-[100px]" style="padding-top:50px" data-i18n="title">Find Your Perfect Cocktail Menu</h1>
+                    <p class="text-sm md:text-base gold-text-light" data-i18n="progress">Question 2 of 4</p>
+                    <div class="divider-gold" style="margin: 12px 0;"></div>
+                </div>
+                
+                <div class="bg-card border-2 border-gold rounded-lg p-8" style="min-height: 650px;">
+                    <div class="quiz-question">
+                        <div class="text-center">
+                            <div class="quiz-icon">🎉</div>
+                        </div>
+                        <h3 class="text-2xl font-semibold gold-text mb-6 text-center" data-i18n="question2">What is the occasion?</h3>
+                        <div class="quiz-options" style="flex-direction: column; gap: 12px;">
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('occasion', 'wedding')" data-question="occasion" data-value="wedding">Wedding / Romantic</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('occasion', 'corporate')" data-question="occasion" data-value="corporate">Corporate / Business</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('occasion', 'party')" data-question="occasion" data-value="party">Party / Celebration</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('occasion', 'casual')" data-question="occasion" data-value="casual">Casual Gathering</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('occasion', 'any')" data-question="occasion" data-value="any">Any / No preference</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 space-y-3">
+                        <div class="flex gap-4">
+                            <button class="btn-gold px-6 py-2 text-base font-semibold rounded-lg flex-1" onclick="goToQuizPage(1)" data-i18n="btn-back">← Back</button>
+                            <button id="nextBtn2" class="btn-gold px-6 py-2 text-base font-semibold rounded-lg flex-1" disabled onclick="goToQuizPage(3)" data-i18n="btn-next">Next →</button>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="restartQuiz()" data-i18n="btn-restart-quiz">🔄 Restart</button>
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="showAllMenus()" data-i18n="btn-see-all-menus">📋 See All Menus</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quiz Page 3 -->
+        <div id="quiz-page-3" class="py-8 px-4 fade-in hidden">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl md:text-4xl font-bold gold-text mb-2 md:pt-[100px]" style="padding-top:50px" data-i18n="title">Find Your Perfect Cocktail Menu</h1>
+                    <p class="text-sm md:text-base gold-text-light" data-i18n="progress">Question 3 of 4</p>
+                    <div class="divider-gold" style="margin: 12px 0;"></div>
+                </div>
+                
+                <div class="bg-card border-2 border-gold rounded-lg p-8" style="min-height: 650px;">
+                    <div class="quiz-question">
+                        <div class="text-center">
+                            <div class="quiz-icon">💪</div>
+                        </div>
+                        <h3 class="text-2xl font-semibold gold-text mb-6 text-center" data-i18n="question3">How strong would you like the cocktails?</h3>
+                        <div class="quiz-options" style="flex-direction: column; gap: 12px;">
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('strength', 'light')" data-question="strength" data-value="light">Light & Easy</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('strength', 'medium')" data-question="strength" data-value="medium">Medium Strength</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('strength', 'strong')" data-question="strength" data-value="strong">A bit Stronger</button>
+                            <button class="quiz-option bg-dark border-2 border-gray-700 rounded-lg px-6 py-4 text-base gold-text-light" onclick="selectQuizOption('strength', 'any')" data-question="strength" data-value="any">Any / No preference</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 space-y-3">
+                        <div class="flex gap-4">
+                            <button class="btn-gold px-6 py-2 text-base font-semibold rounded-lg flex-1" onclick="goToQuizPage(2)" data-i18n="btn-back">← Back</button>
+                            <button id="nextBtn3" class="btn-gold px-6 py-2 text-base font-semibold rounded-lg flex-1" disabled onclick="goToQuizPage(4)" data-i18n="btn-next">Next →</button>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="restartQuiz()" data-i18n="btn-restart-quiz">🔄 Restart</button>
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="showAllMenus()" data-i18n="btn-see-all-menus">📋 See All Menus</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quiz Page 4 - Final Step -->
+        <div id="quiz-page-4" class="py-8 px-4 fade-in hidden">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl md:text-4xl font-bold gold-text mb-2 md:pt-[100px]" style="padding-top:50px" data-i18n="title">Find Your Perfect Cocktail Menu</h1>
+                    <p class="text-sm md:text-base gold-text-light" data-i18n="progress">Question 4 of 4</p>
+                    <div class="divider-gold" style="margin: 12px 0;"></div>
+                </div>
+                
+                <div class="bg-card border-2 border-gold rounded-lg p-8" style="min-height: 450px;">
+                    <div class="quiz-question">
+                        <div class="text-center">
+                            <div class="quiz-icon">🎯</div>
+                        </div>
+                        <h3 class="text-2xl font-semibold gold-text mb-6 text-center" data-i18n="question4">Would you like to choose your desired ingredients?</h3>
+                        <p class="text-center gold-text-light mb-8" data-i18n="question4-desc">You can customize your menu by selecting specific ingredients, or skip this step to see our recommendations right away.</p>
+                    </div>
+                    
+                    <div class="mt-6 space-y-3">
+                        <button class="btn-gold px-8 py-3 text-xl font-semibold rounded-lg w-full" onclick="showIngredientSelection()" data-i18n="btn-optional">Choose Optional Ingredients</button>
+                        <button class="btn-gold px-10 py-4 text-xl font-bold rounded-lg w-full" onclick="showRecommendedMenus()" data-i18n="btn-see-menus">See Recommended Menus</button>
+                        <button class="btn-gold px-6 py-2 text-base font-semibold rounded-lg w-full" onclick="goToQuizPage(3)" data-i18n="btn-back">← Back</button>
+                        <div class="flex gap-3">
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="restartQuiz()" data-i18n="btn-restart-quiz">🔄 Restart</button>
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="showAllMenus()" data-i18n="btn-see-all-menus">📋 See All Menus</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="step1" class="py-4 px-4 fade-in hidden">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-4">
+                    <h1 class="text-2xl font-bold gold-text mb-1 md:pt-[100px]" style="font-size: 36px!important;padding-top:40px" data-i18n="ingredients-title">Craft Your Perfect Cocktail Menu</h1>
+                    <p class="text-sm gold-text-light" data-i18n="ingredients-subtitle">Select your favourite ingredients</p>
+                    <div class="divider-gold" style="margin: 8px 0;"></div>
+                </div>
+                
+                <div class="space-y-4 max-h-[580px] overflow-y-auto pr-2">
+                    <div class="category-section" data-category="spirits">
+                        <div class="flex justify-between items-center mb-2">
+                            <h2 class="text-xl font-semibold gold-text" data-i18n="category-spirits">Base Spirits</h2>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-400" data-i18n="category-skip">Skip this category</span>
+                                <div class="toggle-switch" onclick="toggleCategory('spirits')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2" data-i18n="category-max">Maximum 3 selections</p>
+                        <div class="grid grid-cols-4 md:grid-cols-7 lg:grid-cols-7 gap-3" id="spirits-grid"></div>
+                    </div>
+                    
+                    <div class="category-section" data-category="liqueurs">
+                        <div class="flex justify-between items-center mb-2">
+                            <h2 class="text-xl font-semibold gold-text" data-i18n="category-liqueurs">Liqueurs</h2>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-400" data-i18n="category-skip">Skip this category</span>
+                                <div class="toggle-switch" onclick="toggleCategory('liqueurs')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2" data-i18n="category-max">Maximum 3 selections</p>
+                        <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3" id="liqueurs-grid"></div>
+                    </div>
+                    
+                    <div class="category-section" data-category="juices">
+                        <div class="flex justify-between items-center mb-2">
+                            <h2 class="text-xl font-semibold gold-text" data-i18n="category-juices">Juices</h2>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-400" data-i18n="category-skip">Skip this category</span>
+                                <div class="toggle-switch" onclick="toggleCategory('juices')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2" data-i18n="category-max">Maximum 3 selections</p>
+                        <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-3" id="juices-grid"></div>
+                    </div>
+                    
+                    <div class="category-section" data-category="mixers">
+                        <div class="flex justify-between items-center mb-2">
+                            <h2 class="text-xl font-semibold gold-text" data-i18n="category-mixers">Mixers</h2>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-400" data-i18n="category-skip">Skip this category</span>
+                                <div class="toggle-switch" onclick="toggleCategory('mixers')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2" data-i18n="category-max">Maximum 3 selections</p>
+                        <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-11 gap-3" id="mixers-grid"></div>
+                    </div>
+                    
+                    <div class="category-section" data-category="flavors">
+                        <div class="flex justify-between items-center mb-2">
+                            <h2 class="text-xl font-semibold gold-text" data-i18n="category-flavors">Flavors & Extras</h2>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-400" data-i18n="category-skip">Skip this category</span>
+                                <div class="toggle-switch" onclick="toggleCategory('flavors')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2" data-i18n="category-max">Maximum 3 selections</p>
+                        <div class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-10 gap-3" id="flavors-grid"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-6 space-y-3 pb-2">
+                    <button id="showCocktailsBtn" class="btn-gold px-8 py-2 text-base font-semibold rounded-lg" disabled onclick="showCocktails()" data-i18n="category-show-cocktails">
+                        Show Matching Cocktails
+                    </button>
+                    <button class="text-sm gold-text-light hover:gold-text underline" onclick="backToQuiz()" data-i18n="btn-back-quiz">← Back to Quiz</button>
+                    <div class="flex gap-3 mt-2">
+                        <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="restartQuiz()" data-i18n="btn-restart-quiz">🔄 Restart</button>
+                        <button class="btn-gold px-4 py-2 text-sm rounded-lg flex-1" onclick="showAllMenus()" data-i18n="btn-see-all-menus">📋 See All Menus</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="step2" class="py-3 px-3 hidden" style="padding-top:100px;">
+            <div class="max-w-5xl mx-auto">
+                <div class="bg-dark py-2 mb-3 border-b border-gold">
+                    <div class="flex flex-wrap justify-between items-center gap-3">
+                        <div>
+                            <h2 class="text-lg font-semibold gold-text mb-1" id="resultsTitle" data-i18n="results-title">Your Recommendations</h2>
+                            <div id="selectedTags" class="flex flex-wrap gap-2"></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg" onclick="restartQuiz()" data-i18n="btn-restart">
+                                🔄 Restart
+                            </button>
+                            <button class="btn-gold px-4 py-2 text-sm rounded-lg" onclick="refineSelection()" data-i18n="btn-back">
+                                ← Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filter Toggle Button -->
+                <div class="mb-3">
+                    <button id="filterToggleBtn" class="btn-gold px-4 py-2 text-sm rounded-lg" onclick="toggleFilterSection()">
+                        ✏️ Show Filters
+                    </button>
+                </div>
+                
+                <!-- Filter Section -->
+                <div id="filterSection" class="mb-3 hidden">
+                    <div class="bg-card border-2 border-gold rounded-lg p-3">
+                        <!-- Strength Filters -->
+                        <div class="mb-2">
+                            <h3 class="text-sm font-semibold gold-text mb-2" data-i18n="filter-strength">Filter by Strength:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="strength-filter-btn btn-gold px-3 py-1 text-xs rounded active-filter" data-strength="all" onclick="filterCocktailsByStrength('all')" data-i18n="filter-all">All</button>
+                                <button class="strength-filter-btn btn-gold px-3 py-1 text-xs rounded" data-strength="light" onclick="filterCocktailsByStrength('light')" data-i18n="filter-light">Light</button>
+                                <button class="strength-filter-btn btn-gold px-3 py-1 text-xs rounded" data-strength="medium" onclick="filterCocktailsByStrength('medium')" data-i18n="filter-medium">Medium</button>
+                                <button class="strength-filter-btn btn-gold px-3 py-1 text-xs rounded" data-strength="strong" onclick="filterCocktailsByStrength('strong')" data-i18n="filter-strong">Strong</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Ingredient Filters -->
+                        <div class="mb-3">
+                            <h3 class="text-sm font-semibold gold-text mb-2" data-i18n="filter-ingredients">Filter by Ingredients:</h3>
+                            <div id="ingredientFiltersContainer" class="flex flex-wrap gap-2">
+                                <!-- Ingredient filter buttons will be dynamically rendered here -->
+                            </div>
+                        </div>
+                        
+                        <button class="btn-gold px-4 py-1 text-xs rounded" onclick="clearAllFilters()" data-i18n="filter-clear">Clear Filters</button>
+                    </div>
+                </div>
+                
+                <!-- Ingredient Selection Modal -->
+                <div id="ingredientSelectionModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4 pt-24">
+                    <div class="bg-card border-2 border-gold rounded-lg max-w-4xl w-full max-h-[75vh] overflow-y-auto mt-4">
+                        <div class="sticky top-0 bg-card border-b border-gold p-4 flex justify-between items-center">
+                            <h3 class="text-xl font-bold gold-text" data-i18n="modal-add-ingredients">Add Ingredients</h3>
+                            <button onclick="closeIngredientSelectionModal()" class="text-2xl gold-text hover:text-white">&times;</button>
+                        </div>
+                        <div id="ingredientSelectionContent" class="p-4">
+                            <!-- Ingredient categories will be rendered here -->
+                        </div>
+                        <div class="sticky bottom-0 bg-card border-t border-gold p-4 flex justify-end gap-3">
+                            <button onclick="closeIngredientSelectionModal()" class="btn-gold px-6 py-2 rounded-lg" data-i18n="modal-cancel">Cancel</button>
+                            <button onclick="confirmIngredientSelection()" class="btn-gold px-6 py-2 rounded-lg font-semibold" data-i18n="modal-save">Save</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col lg:flex-row gap-3 max-h-[580px] overflow-y-auto pr-2">
+                    <div class="lg:w-2/5 fade-in">
+                        <h2 class="text-lg font-bold gold-text mb-3 text-center lg:text-left" data-i18n="menu-title">Your Reference Menu</h2>
+                        <div class="bg-card border-2 border-gold rounded-lg p-3">
+                            <div id="menuImageContainer" class="mb-2 relative">
+                                <img id="menuImage" src="" alt="Menu from our previous events" class="w-full rounded-lg shadow-2xl menu-image-clickable" onclick="enlargeMenuImage()">
+                                
+                                <button id="prevMenuBtn" class="menu-nav-btn hidden absolute left-2 top-1/2 -translate-y-1/2 bg-dark border-2 border-gold rounded-full w-8 h-8 flex items-center justify-center hover:bg-gold transition-all" onclick="navigateMenu(-1)">
+                                    <span class="text-lg gold-text">‹</span>
+                                </button>
+                                
+                                <button id="nextMenuBtn" class="menu-nav-btn hidden absolute right-2 top-1/2 -translate-y-1/2 bg-dark border-2 border-gold rounded-full w-8 h-8 flex items-center justify-center hover:bg-gold transition-all" onclick="navigateMenu(1)">
+                                    <span class="text-lg gold-text">›</span>
+                                </button>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-center gold-text-light text-xs italic flex-1" data-i18n="menu-caption">Menu from our previous events</p>
+                                <p id="menuPageIndicator" class="text-xs gold-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-3/5 fade-in">
+                        <h2 class="text-lg font-bold gold-text mb-3 text-center lg:text-left" data-i18n="cocktails-title">Matching Cocktails from Our Menu</h2>
+                        <div id="cocktailsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Image Enlarge Modal -->
+    <div id="imageModal" class="modal-overlay" onclick="closeImageModal()">
+        <img id="enlargedImage" src="" alt="Enlarged menu" class="modal-image" onclick="event.stopPropagation()">
+    </div>
+    
+    <div id="recipeModal" class="modal">
+        <div class="modal-content p-8">
+            <div class="flex justify-between items-start mb-6">
+                <h2 id="modalTitle" class="text-3xl font-bold gold-text"></h2>
+                <button onclick="closeModal()" class="text-3xl gold-text hover:text-white">&times;</button>
+            </div>
+            <div id="modalContent"></div>
+            <div class="mt-8 flex justify-center">
+                <button class="btn-gold px-8 py-3 rounded-lg" onclick="closeModal()" data-i18n="recipe-close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Test</title>
+    <style>
+        .hidden { display: none; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div id="quiz-page-1">
+        <h2>Page 1</h2>
+        <button onclick="selectOption('taste', 'sweet')" data-question="taste" data-value="sweet">Sweet</button>
+        <button id="nextBtn1" disabled onclick="goToPage(2)">Next</button>
+    </div>
+    
+    <div id="quiz-page-2" class="hidden">
+        <h2>Page 2</h2>
+        <button onclick="goToPage(1)">Back</button>
+    </div>
+    
+    <script>
+        let answers = { taste: null };
+        
+        function selectOption(question, value) {
+            answers[question] = value;
+            console.log('Selected:', question, value);
+            document.getElementById('nextBtn1').disabled = false;
+        }
+        
+        function goToPage(num) {
+            console.log('Going to page', num);
+            document.getElementById('quiz-page-1').classList.add('hidden');
+            document.getElementById('quiz-page-2').classList.add('hidden');
+            document.getElementById('quiz-page-' + num).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
